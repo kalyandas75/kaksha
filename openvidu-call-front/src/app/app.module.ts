@@ -24,6 +24,7 @@ import { createCustomElement } from '@angular/elements';
 import { ElementZoneStrategyFactory } from 'elements-zone-strategy';
 import { NgxLinkifyjsModule } from 'ngx-linkifyjs';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import {MatListModule} from '@angular/material/list';
 
 // Pipes
 import { LinkifyPipe } from './shared/pipes/linkfy';
@@ -113,7 +114,8 @@ import { StorageService } from './shared/services/storage/storage.service';
 		AppRoutingModule,
 		HttpClientModule,
 		FlexLayoutModule,
-		NgxLinkifyjsModule.forRoot()
+		NgxLinkifyjsModule.forRoot(),
+		MatListModule
 	],
 	entryComponents: [DialogErrorComponent, WebComponentComponent],
 	providers: [

@@ -56,6 +56,8 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 	hasVideoDevices: boolean;
 	hasAudioDevices: boolean;
 	showConfigCard: boolean;
+
+	isTeacher = false;
 	private log: ILogger;
 
 	constructor(
@@ -68,6 +70,7 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 
 	) {
 		this.log = this.loggerSrv.get('RoomConfigComponent');
+		this.isTeacher = 'teacher' === this.storageSrv.get('user').role;
 	}
 
 	@HostListener('window:beforeunload')
@@ -76,6 +79,7 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 	}
 
 	async ngOnInit() {
+
 		this.subscribeToUsers();
 		this.setNicknameForm();
 		this.setRandomAvatar();
@@ -88,6 +92,10 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 		// publisher.on('streamAudioVolumeChange', (event: any) => {
 		//   this.volumeValue = Math.round(Math.abs(event.value.newValue));
 		// });
+		if('student' === this.storageSrv.get('user').role) {
+		//	this.isAudioActive = false;
+		//	this.isVideoActive = false;
+		}
 	}
 
 	ngOnDestroy() {
@@ -311,13 +319,17 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 
 	private initwebcamPublisher() {
 		const micStorageDevice = this.micSelected?.device || undefined;
-		const camStorageDevice = this.camSelected?.device || undefined;
+		let camStorageDevice = null;
+		if(this.isTeacher) camStorageDevice =  this.camSelected?.device || undefined;
 
-		const videoSource =  this.hasVideoDevices ? camStorageDevice : false;
+		let videoSource =  null;
+		if(this.isTeacher)  videoSource = this.hasVideoDevices ? camStorageDevice : false;
 		const audioSource = this.hasAudioDevices ? micStorageDevice : false;
 		const publishAudio = this.hasAudioDevices ? this.isAudioActive : false;
-		const publishVideo = this.hasVideoDevices ? this.isVideoActive : false;
-		const mirror = this.camSelected && this.camSelected.type === CameraType.FRONT;
+		let publishVideo = null;
+		if(this.isTeacher) publishVideo = this.hasVideoDevices ? this.isVideoActive : false;
+		let mirror = null;
+		if(this.isTeacher) mirror = this.camSelected && this.camSelected.type === CameraType.FRONT;
 		const properties = this.oVSessionService.createProperties(videoSource, audioSource, publishVideo, publishAudio, mirror);
 		const publisher = this.oVSessionService.initCamPublisher(undefined, properties);
 		this.handlePublisherSuccess(publisher);
@@ -337,7 +349,7 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 					this.oVDevicesService.setMicSelected(audioLabel);
 				}
 
-				if (this.hasVideoDevices) {
+				if (this.isTeacher && this.hasVideoDevices) {
 					const videoLabel = publisher.stream.getMediaStream().getVideoTracks()[0].label;
 					this.oVDevicesService.setCamSelected(videoLabel);
 				}

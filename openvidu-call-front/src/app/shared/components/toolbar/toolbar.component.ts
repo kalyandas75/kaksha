@@ -60,10 +60,10 @@ export class ToolbarComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		if (this.lightTheme) {
-			this.logoUrl += 'openvidu_logo_grey.png';
+			this.logoUrl = 'assets/images/logo.jpg';
 			return;
 		}
-		this.logoUrl += 'openvidu_logo.png';
+		this.logoUrl = 'assets/images/logo.jpg';
 	}
 
 	toggleMicrophone() {

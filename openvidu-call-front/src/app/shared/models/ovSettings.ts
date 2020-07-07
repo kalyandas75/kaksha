@@ -56,4 +56,8 @@ export class OvSettingsModel {
 	public setScreenSharing(screenShare: boolean) {
 		this.ovSettings.toolbarButtons.screenShare = screenShare;
 	}
+
+	public setVideo(video: boolean) {
+		this.ovSettings.toolbarButtons.video = video;
+	}
 }

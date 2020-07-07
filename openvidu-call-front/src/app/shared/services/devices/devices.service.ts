@@ -21,7 +21,11 @@ export class DevicesService {
 	private micSelected: IDevice;
 	private log: ILogger;
 
+
+	isTeacher = false;
+
 	constructor(private loggerSrv: LoggerService, private utilSrv: UtilsService, private storageSrv: StorageService) {
+		this.isTeacher = 'teacher' === this.storageSrv.get('user').role;
 		this.log = this.loggerSrv.get('DevicesService');
 		this.OV = new OpenVidu();
 	}
@@ -34,10 +38,13 @@ export class DevicesService {
 			this.initAudioDevices();
 			this.micSelected = this.getMicSelected();
 		}
-		if (this.hasVideoDeviceAvailable()) {
-			this.initVideoDevices();
-			this.camSelected = this.cameras.find((device) => device.type === CameraType.FRONT);
+		if(this.isTeacher) {
+			if (this.hasVideoDeviceAvailable()) {
+				this.initVideoDevices();
+				this.camSelected = this.cameras.find((device) => device.type === CameraType.FRONT);
+			}
 		}
+
 	}
 	private async initOpenViduDevices() {
 		this.devices = await this.OV.getDevices();

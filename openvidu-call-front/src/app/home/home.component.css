@@ -115,7 +115,7 @@ h4 {
   border: 0;
   padding: 4px 8px;
   font-size: 17px;
-  width: calc(100% - 90px);
+  /*width: calc(100% - 90px);*/
   outline: none;
   caret-color: #000000;
   color: #303030;

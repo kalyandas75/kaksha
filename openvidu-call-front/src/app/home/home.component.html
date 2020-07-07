@@ -1,18 +1,24 @@
 <div class="section1">
 	<mat-toolbar id="header">
-		<a href="https://openvidu.io/" target="_blank">
-			<img id="header_img" alt="OpenVidu Logo" src="assets/images/openvidu_logo.png" />
+		<a href="https://technakriti.com/" target="_blank">
+			<img id="header_img" alt="Kaksha Logo" src="assets/images/logo.jpg" />
 		</a>
 		<div class="ovVersion">
 			<span>{{ version }}</span>
 		</div>
 	</mat-toolbar>
+	
+
 	<div class="container">
 		<div class="ovInfo">
-			<img class="ovLogo" alt="OpenVidu Logo" src="assets/images/openvidu_vert_white_bg_trans_cropped.png" />
-			<h4>Videoconference rooms in one click</h4>
+			<img class="ovLogo" alt="OpenVidu Logo" src="assets/images/logo.jpg" />
+			<h4 style="color: black;">Online Classes - Kaksha</h4>
+			<a href="javascript: void(0)" *ngIf="isLoggedIn()" (click)="logout()">Logout</a>
 		</div>
+		<br>
+		<!--
 		<div class="formContainer">
+			
 			<div class="roomError" id="requiredNameError" *ngIf="roomForm.hasError('required')">
 				Room name is <strong>required</strong>
 			</div>
@@ -25,27 +31,52 @@
 					<button type="submit" class="joinButton" id="joinButton" >JOIN</button>
 				</div>
 			</form>
+			-->
+		<div *ngIf="!isLoggedIn()">
+			<div class="roomError" *ngIf="submitted && (loginForm.invalid || invalidCreds)">
+				Invalid credentials
+			</div>
+			<br>
+			<form [formGroup]="loginForm" novalidate (ngSubmit)="login()">
+				<input matInput class="inputForm" type="text" formControlName="username" 
+				 autocomplete="off" id="usernameInput" placeholder="Username" />
+				<br>
+				<br>
+				<input matInput class="inputForm" type="password" formControlName="password"  
+				autocomplete="off" id="passwordInput"  placeholder="Password"/>
+				<br>
+				<br>
+				<button mat-flat-button color="primary" type="submit" [disabled]="loading">Login</button>
+			</form>
+		</div>
+		<div *ngIf="isLoggedIn()" style="align-items: center;margin-left: auto;
+		margin-right: auto; width: 250px;">
+
+					<mat-card>
+						<mat-card-title>Your Classrooms</mat-card-title>
+						<mat-card-content>
+							<mat-list>
+								<mat-list-item *ngFor="let uc of userClasses"> 
+									<span>{{ uc.name }} </span>
+									<span style="text-align: right; float: right; width: 100%;">
+										<button  mat-icon-button  style="float: inline-end" (click)="goToRoom(uc.id)">
+											<mat-icon> input icon</mat-icon>
+										  </button>
+									</span>
+
+								</mat-list-item>
+							</mat-list>
+						</mat-card-content>
+					</mat-card>
+
+
+
+
 		</div>
 	</div>
 
 
 	<mat-toolbar class="footer">
-		<span>
-			Photo by
-			<a
-				rel="noopener noreferrer"
-				target="_blank"
-				href="https://unsplash.com/@danielleone?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
-			>
-				Daniel Leone
-			</a>
-			on
-			<a
-				href="https://unsplash.com/s/photos/mountain?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText"
-				target="_blank"
-			>
-				Unsplash
-			</a></span
-		>
+		<span>Photo by <a href="https://unsplash.com/@jessbaileydesigns?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Jess Bailey</a> on <a href="/s/photos/school?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
 	</mat-toolbar>
 </div>

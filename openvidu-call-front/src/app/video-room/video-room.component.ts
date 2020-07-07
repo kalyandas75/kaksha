@@ -31,6 +31,7 @@ import { RemoteUsersService } from '../shared/services/remote-users/remote-users
 import { UtilsService } from '../shared/services/utils/utils.service';
 import { MatSidenav } from '@angular/material/sidenav';
 import { ChatService } from '../shared/services/chat/chat.service';
+import { StorageService } from '../shared/services/storage/storage.service';
 
 @Component({
 	selector: 'app-video-room',
@@ -81,7 +82,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		public oVSessionService: OpenViduSessionService,
 		private oVDevicesService: DevicesService,
 		private loggerSrv: LoggerService,
-		private chatService: ChatService
+		private chatService: ChatService,
+		private storageService: StorageService
 	) {
 		this.log = this.loggerSrv.get('VideoRoomComponent');
 	}
@@ -102,7 +104,13 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	async ngOnInit() {
 		this.lightTheme = this.externalConfig?.getTheme() === Theme.LIGHT;
 		this.ovSettings = !!this.externalConfig ? this.externalConfig.getOvSettings() : new OvSettingsModel();
-		this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
+		if('teacher' === this.storageService.get('user').role) {
+			this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
+		} else {
+			this.ovSettings.setScreenSharing(false);
+			this.ovSettings.setVideo(false);
+		}
+	
 	}
 
 	ngOnDestroy() {

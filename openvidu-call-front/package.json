@@ -69,5 +69,5 @@
         "start": "ng serve",
         "test": "ng test openvidu-call --watch=false --code-coverage"
     },
-    "version": "2.15.0"
+    "version": "0.0.1"
 }
