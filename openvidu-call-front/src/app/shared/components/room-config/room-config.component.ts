@@ -92,9 +92,9 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 		// publisher.on('streamAudioVolumeChange', (event: any) => {
 		//   this.volumeValue = Math.round(Math.abs(event.value.newValue));
 		// });
-		if('student' === this.storageSrv.get('user').role) {
-		//	this.isAudioActive = false;
-		//	this.isVideoActive = false;
+		if ('student' === this.storageSrv.get('user').role) {
+			//	this.isAudioActive = false;
+			//	this.isVideoActive = false;
 		}
 	}
 
@@ -124,7 +124,6 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 
 	async onMicrophoneSelected(event: any) {
 		const audioSource = event?.value;
-
 		if (!!audioSource) {
 			// Is New deviceId different than older?
 			if (this.oVDevicesService.needUpdateAudioTrack(audioSource)) {
@@ -320,16 +319,19 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 	private initwebcamPublisher() {
 		const micStorageDevice = this.micSelected?.device || undefined;
 		let camStorageDevice = null;
-		if(this.isTeacher) camStorageDevice =  this.camSelected?.device || undefined;
-
-		let videoSource =  null;
-		if(this.isTeacher)  videoSource = this.hasVideoDevices ? camStorageDevice : false;
+		// if (this.isTeacher) camStorageDevice = this.camSelected?.device || undefined;
+		camStorageDevice = this.camSelected?.device || undefined;
+		let videoSource = null;
+		// if (this.isTeacher) videoSource = this.hasVideoDevices ? camStorageDevice : false;
+		videoSource = this.hasVideoDevices ? camStorageDevice : false;
 		const audioSource = this.hasAudioDevices ? micStorageDevice : false;
 		const publishAudio = this.hasAudioDevices ? this.isAudioActive : false;
 		let publishVideo = null;
-		if(this.isTeacher) publishVideo = this.hasVideoDevices ? this.isVideoActive : false;
+		// if (this.isTeacher) publishVideo = this.hasVideoDevices ? this.isVideoActive : false;
+		publishVideo = this.hasVideoDevices ? this.isVideoActive : false;
 		let mirror = null;
-		if(this.isTeacher) mirror = this.camSelected && this.camSelected.type === CameraType.FRONT;
+		// if (this.isTeacher) mirror = this.camSelected && this.camSelected.type === CameraType.FRONT;
+		mirror = this.camSelected && this.camSelected.type === CameraType.FRONT;
 		const properties = this.oVSessionService.createProperties(videoSource, audioSource, publishVideo, publishAudio, mirror);
 		const publisher = this.oVSessionService.initCamPublisher(undefined, properties);
 		this.handlePublisherSuccess(publisher);

@@ -48,7 +48,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	// !Deprecated
 	@Output() _joinSession = new EventEmitter<any>();
 	// !Deprecated
-  	@Output() _leaveSession = new EventEmitter<any>();
+	@Output() _leaveSession = new EventEmitter<any>();
 
 	@ViewChild('chatComponent') chatComponent: ChatComponent;
 	@ViewChild('sidenav') chatSidenav: MatSidenav;
@@ -104,13 +104,13 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	async ngOnInit() {
 		this.lightTheme = this.externalConfig?.getTheme() === Theme.LIGHT;
 		this.ovSettings = !!this.externalConfig ? this.externalConfig.getOvSettings() : new OvSettingsModel();
-		if('teacher' === this.storageService.get('user').role) {
+		if ('teacher' === this.storageService.get('user').role) {
 			this.ovSettings.setScreenSharing(this.ovSettings.hasScreenSharing() && !this.utilsSrv.isMobile());
 		} else {
 			this.ovSettings.setScreenSharing(false);
-			this.ovSettings.setVideo(false);
+			// this.ovSettings.setVideo(false);
 		}
-	
+
 	}
 
 	ngOnDestroy() {
@@ -141,6 +141,10 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		this.subscribeToLocalUsers();
 		this.subscribeToRemoteUsers();
 		this.mySessionId = this.oVSessionService.getSessionId();
+		if ('teacher' !== this.storageService.get('user').role) {
+			this.toggleCam();
+			this.toggleMic();
+		}
 
 		setTimeout(() => {
 			this.openviduLayout = new OpenViduLayout();
@@ -486,7 +490,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		}
 	}
 
-	private sendNicknameSignal(nickname: string , connection?: Connection) {
+	private sendNicknameSignal(nickname: string, connection?: Connection) {
 		const signalOptions: SignalOptions = {
 			data: JSON.stringify({ nickname }),
 			type: 'nicknameChanged',

@@ -38,12 +38,12 @@ export class DevicesService {
 			this.initAudioDevices();
 			this.micSelected = this.getMicSelected();
 		}
-		if(this.isTeacher) {
-			if (this.hasVideoDeviceAvailable()) {
-				this.initVideoDevices();
-				this.camSelected = this.cameras.find((device) => device.type === CameraType.FRONT);
-			}
+		// if(this.isTeacher) {
+		if (this.hasVideoDeviceAvailable()) {
+			this.initVideoDevices();
+			this.camSelected = this.cameras.find((device) => device.type === CameraType.FRONT);
 		}
+		// }
 
 	}
 	private async initOpenViduDevices() {
