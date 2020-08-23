@@ -23,7 +23,6 @@ import { StorageService } from '../../services/storage/storage.service';
 	styleUrls: ['./room-config.component.css']
 })
 export class RoomConfigComponent implements OnInit, OnDestroy {
-
 	private readonly USER_NICKNAME = 'openviduCallNickname';
 	@ViewChild('bodyCard') bodyCard: ElementRef;
 
@@ -60,14 +59,15 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 	isTeacher = false;
 	private log: ILogger;
 
+	resolution: string = '320x240';
+
 	constructor(
 		private route: ActivatedRoute,
 		private utilsSrv: UtilsService,
 		public oVSessionService: OpenViduSessionService,
 		private oVDevicesService: DevicesService,
 		private loggerSrv: LoggerService,
-		private storageSrv: StorageService,
-
+		private storageSrv: StorageService
 	) {
 		this.log = this.loggerSrv.get('RoomConfigComponent');
 		this.isTeacher = 'teacher' === this.storageSrv.get('user').role;
@@ -79,7 +79,6 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 	}
 
 	async ngOnInit() {
-
 		this.subscribeToUsers();
 		this.setNicknameForm();
 		this.setRandomAvatar();
@@ -92,10 +91,10 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 		// publisher.on('streamAudioVolumeChange', (event: any) => {
 		//   this.volumeValue = Math.round(Math.abs(event.value.newValue));
 		// });
-		if ('student' === this.storageSrv.get('user').role) {
-			//	this.isAudioActive = false;
-			//	this.isVideoActive = false;
-		}
+		// if ('student' === this.storageSrv.get('user').role) {
+		// 		this.isAudioActive = false;
+		// 		this.isVideoActive = false;
+		// }
 	}
 
 	ngOnDestroy() {
@@ -167,10 +166,13 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 			const screenPublisher = this.initScreenPublisher();
 
 			screenPublisher.on('accessAllowed', (event) => {
-				screenPublisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
-					this.log.d('Clicked native stop button. Stopping screen sharing');
-					this.toggleScreenShare();
-				});
+				screenPublisher.stream
+					.getMediaStream()
+					.getVideoTracks()[0]
+					.addEventListener('ended', () => {
+						this.log.d('Clicked native stop button. Stopping screen sharing');
+						this.toggleScreenShare();
+					});
 				this.oVSessionService.enableScreenUser(screenPublisher);
 				if (!this.oVSessionService.hasWebcamVideoActive()) {
 					this.oVSessionService.disableWebcamUser();
@@ -286,15 +288,14 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 	private scrollToBottom(): void {
 		try {
 			this.bodyCard.nativeElement.scrollTop = this.bodyCard.nativeElement.scrollHeight;
-		} catch (err) {
-		}
+		} catch (err) {}
 	}
 
 	private initScreenPublisher(): Publisher {
 		const videoSource = ScreenType.SCREEN;
 		const willThereBeWebcam = this.oVSessionService.isWebCamEnabled() && this.oVSessionService.hasWebcamVideoActive();
 		const hasAudio = willThereBeWebcam ? false : this.isAudioActive;
-		const properties = this.oVSessionService.createProperties(videoSource, undefined, true, hasAudio, false);
+		const properties = this.oVSessionService.createProperties(videoSource, undefined, true, hasAudio, this.resolution, false);
 
 		try {
 			return this.oVSessionService.initScreenPublisher(undefined, properties);
@@ -332,7 +333,14 @@ export class RoomConfigComponent implements OnInit, OnDestroy {
 		let mirror = null;
 		// if (this.isTeacher) mirror = this.camSelected && this.camSelected.type === CameraType.FRONT;
 		mirror = this.camSelected && this.camSelected.type === CameraType.FRONT;
-		const properties = this.oVSessionService.createProperties(videoSource, audioSource, publishVideo, publishAudio, mirror);
+		const properties = this.oVSessionService.createProperties(
+			videoSource,
+			audioSource,
+			publishVideo,
+			publishAudio,
+			this.resolution,
+			mirror
+		);
 		const publisher = this.oVSessionService.initCamPublisher(undefined, properties);
 		this.handlePublisherSuccess(publisher);
 		this.handlePublisherError(publisher);

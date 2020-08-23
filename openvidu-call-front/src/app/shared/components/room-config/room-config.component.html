@@ -3,11 +3,10 @@
 	<div class="modal" *ngIf="showConfigCard">
 		<div class="modal-dialog modal-xl">
 			<div class="modal-content cardContainer">
-
 				<!-- Modal Header -->
 				<div class="modal-header cardHeader">
 					<div class="headerLogo">
-						<img id="header_img" alt="Kaksha Logo" src="assets/images/logo.jpg" />
+						<img id="header_img" alt="Kaksha Logo" src="assets/images/logo.png" />
 					</div>
 					<h3 class="headerTitle">{{ mySessionId }}</h3>
 
@@ -18,12 +17,10 @@
 
 				<!-- Modal body -->
 				<div class="modal-body" #bodyCard>
-
 					<div class="row align-items-center">
 						<!-- <div class="col-sm-6 col-md-6 col-lg-6 leftSection" *ngIf="isTeacher"> -->
 						<div class="col-sm-6 col-md-6 col-lg-6 leftSection">
 							<div class="videoContainer">
-
 								<!-- <mat-slider
 						class="volumeSlider"
 						*ngIf="volumeValue < 100"
@@ -37,11 +34,12 @@
 
 								<div *ngFor="let localUser of localUsers; let i = index">
 									<!-- Only webcam video will be shown if webcamera is available -->
-									<ov-video *ngIf="(localUser.isCamera() && hasVideoDevices) || localUser.isScreen()"
+									<ov-video
+										*ngIf="(localUser.isCamera() && hasVideoDevices) || localUser.isScreen()"
 										[streamManager]="localUser.streamManager"
-										[className]="localUsers.length > 1 && i === 0 ? 'ovVideoSmall' : ''"></ov-video>
-									<div class="cameraMessageContainer"
-										*ngIf="localUser.isCamera() && !hasVideoDevices">
+										[className]="localUsers.length > 1 && i === 0 ? 'ovVideoSmall' : ''"
+									></ov-video>
+									<div class="cameraMessageContainer" *ngIf="localUser.isCamera() && !hasVideoDevices">
 										<span>Oops! Camera is not available</span>
 									</div>
 								</div>
@@ -58,30 +56,29 @@
 						<div class="col-sm-6 col-md-6 col-lg-6 rightSection">
 							<div class="avatarContainer" *ngIf="isTeacher">
 								<h3>Avatar</h3>
-
 							</div>
 
-
 							<div fxLayout="row" fxFill id="avatarSection" *ngIf="hasVideoDevices && isTeacher">
-
 								<div class="" fxFlex="100" fxLayoutAlign="center center">
-
-
-									<div id="avatarContainer" (click)="setAvatar('video')"
-										[style.background]="avatarSelected === 'video' ? 'lightgreen' : 'transparent'">
+									<div
+										id="avatarContainer"
+										(click)="setAvatar('video')"
+										[style.background]="avatarSelected === 'video' ? 'lightgreen' : 'transparent'"
+									>
 										<div id="imgText" *ngIf="!videoAvatar">
 											<span>Press Avatar Button</span>
 										</div>
 										<img id="avatarImg" *ngIf="videoAvatar" [src]="videoAvatar" />
 									</div>
-									<div id="avatarContainer" (click)="setAvatar('random')"
-										[style.background]="avatarSelected === 'random' ? 'lightgreen' : 'transparent'">
-										<mat-spinner id="imgText" [diameter]="70" *ngIf="!randomAvatar" color="accent">
-										</mat-spinner>
+									<div
+										id="avatarContainer"
+										(click)="setAvatar('random')"
+										[style.background]="avatarSelected === 'random' ? 'lightgreen' : 'transparent'"
+									>
+										<mat-spinner id="imgText" [diameter]="70" *ngIf="!randomAvatar" color="accent"> </mat-spinner>
 										<img id="avatarImg" *ngIf="randomAvatar" [src]="randomAvatar" />
 									</div>
 								</div>
-
 							</div>
 
 							<!-- Devices section / Nickname-->
@@ -95,9 +92,14 @@
 									<div class="two" fxFlex="80" fxLayoutAlign="center center">
 										<form id="nicknameForm" class="alternate-theme">
 											<mat-form-field>
-												<input matInput placeholder="Nickname"
-													[formControl]="nicknameFormControl" [errorStateMatcher]="matcher"
-													(keypress)="eventKeyPress($event)" autocomplete="off" />
+												<input
+													matInput
+													placeholder="Nickname"
+													[formControl]="nicknameFormControl"
+													[errorStateMatcher]="matcher"
+													(keypress)="eventKeyPress($event)"
+													autocomplete="off"
+												/>
 												<mat-error *ngIf="nicknameFormControl.hasError('required')">
 													Nickname is <strong>required</strong>
 												</mat-error>
@@ -111,25 +113,24 @@
 							</div>
 
 							<!-- Devices section / Microphone-->
-							<div fxLayout="row" fxFill id="devicesSection"
-								*ngIf="hasAudioDevices && (ovSettings | hasAudio)">
+							<div fxLayout="row" fxFill id="devicesSection" *ngIf="hasAudioDevices && (ovSettings | hasAudio)">
 								<div fxLayout fxFlex>
 									<div class="one" fxFlex="20" fxLayoutAlign="center center">
-										<button mat-mini-fab (click)="toggleMic()" class="deviceButton"
-											id="configCardMicrophoneButton">
-											<mat-icon *ngIf="isAudioActive" matTooltip="Microphone Enabled">mic
-											</mat-icon>
-											<mat-icon *ngIf="!isAudioActive" color="warn"
-												matTooltip="Microphone Disabled">mic_off</mat-icon>
+										<button mat-mini-fab (click)="toggleMic()" class="deviceButton" id="configCardMicrophoneButton">
+											<mat-icon *ngIf="isAudioActive" matTooltip="Microphone Enabled">mic </mat-icon>
+											<mat-icon *ngIf="!isAudioActive" color="warn" matTooltip="Microphone Disabled"
+												>mic_off</mat-icon
+											>
 										</button>
 									</div>
 									<div class="two" fxFlex="80" fxLayoutAlign="center center">
 										<mat-form-field class="alternate-theme">
-											<mat-select placeholder="Microphone Options"
+											<mat-select
+												placeholder="Microphone Options"
 												[ngModel]="isAudioActive && micSelected ? micSelected.device : 'None'"
-												(selectionChange)="onMicrophoneSelected($event)">
-												<mat-option *ngFor="let microphone of microphones"
-													[value]="microphone.device">
+												(selectionChange)="onMicrophoneSelected($event)"
+											>
+												<mat-option *ngFor="let microphone of microphones" [value]="microphone.device">
 													{{ microphone.label }}
 												</mat-option>
 											</mat-select>
@@ -138,23 +139,23 @@
 								</div>
 							</div>
 							<!-- Devices section / Camera-->
-							<div fxLayout="row" fxFill id="devicesSection"
-								*ngIf="hasVideoDevices && (ovSettings | hasVideo)">
+							<div fxLayout="row" fxFill id="devicesSection" *ngIf="hasVideoDevices && (ovSettings | hasVideo)">
 								<div fxLayout fxFlex>
 									<div class="one" fxFlex="20" fxLayoutAlign="center center">
-										<button mat-mini-fab (click)="toggleCam()" class="deviceButton"
-											id="configCardCameraButton">
-											<mat-icon *ngIf="isVideoActive" matTooltip="Camera Enabled">videocam
-											</mat-icon>
+										<button mat-mini-fab (click)="toggleCam()" class="deviceButton" id="configCardCameraButton">
+											<mat-icon *ngIf="isVideoActive" matTooltip="Camera Enabled">videocam </mat-icon>
 											<mat-icon *ngIf="!isVideoActive" color="warn" matTooltip="Camera Disabled">
-												videocam_off</mat-icon>
+												videocam_off</mat-icon
+											>
 										</button>
 									</div>
 									<div class="two" fxFlex="80" fxLayoutAlign="center center">
 										<mat-form-field class="alternate-theme">
-											<mat-select placeholder="Camera Options"
+											<mat-select
+												placeholder="Camera Options"
 												[ngModel]="isVideoActive && camSelected ? camSelected.device : 'None'"
-												(selectionChange)="onCameraSelected($event)">
+												(selectionChange)="onCameraSelected($event)"
+											>
 												<mat-option *ngFor="let camera of cameras" [value]="camera.device">
 													{{ camera.label }}
 												</mat-option>
@@ -168,35 +169,39 @@
 							<div fxLayout="row" fxFill id="devicesSection" *ngIf="ovSettings | hasScreenSharing">
 								<div fxLayout fxFlex>
 									<div class="one" fxFlex="20" fxLayoutAlign="center center">
-										<button mat-mini-fab (click)="toggleScreenShare()" class="deviceButton"
-											id="configCardScreenButton">
-											<mat-icon *ngIf="this.oVSessionService.isScreenShareEnabled()"
-												matTooltip="Screen Share Enabled">screen_share</mat-icon>
-											<mat-icon *ngIf="!this.oVSessionService.isScreenShareEnabled()" color="warn"
-												matTooltip="Screen Share Disabled">
-												stop_screen_share</mat-icon>
+										<button mat-mini-fab (click)="toggleScreenShare()" class="deviceButton" id="configCardScreenButton">
+											<mat-icon *ngIf="this.oVSessionService.isScreenShareEnabled()" matTooltip="Screen Share Enabled"
+												>screen_share</mat-icon
+											>
+											<mat-icon
+												*ngIf="!this.oVSessionService.isScreenShareEnabled()"
+												color="warn"
+												matTooltip="Screen Share Disabled"
+											>
+												stop_screen_share</mat-icon
+											>
 										</button>
 									</div>
 									<div class="two" fxFlex="80" fxLayoutAlign="center center">
 										<mat-form-field class="alternate-theme">
-											<input matInput disabled placeholder="Screen"
-												[ngModel]="this.oVSessionService.isScreenShareEnabled() ? 'Screen' : 'None'" />
+											<input
+												matInput
+												disabled
+												placeholder="Screen"
+												[ngModel]="this.oVSessionService.isScreenShareEnabled() ? 'Screen' : 'None'"
+											/>
 										</mat-form-field>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-
 				</div>
 
 				<!-- Modal footer -->
-				<div class="modal-footer" style="justify-content: center">
-					<button mat-flat-button color="accent" (click)="joinSession()" form="nicknameForm"
-						id="joinButton">JOIN</button>
-
+				<div class="modal-footer" style="justify-content: center;">
+					<button mat-flat-button (click)="joinSession()" form="nicknameForm" id="joinButton">JOIN</button>
 				</div>
-
 			</div>
 		</div>
 	</div>

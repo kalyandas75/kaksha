@@ -30,6 +30,8 @@ export class OpenViduSessionService {
 	private screenMediaStream: MediaStream = null;
 	private webcamMediaStream: MediaStream = null;
 
+	private resolution: string = '320x240';
+
 	constructor(private loggerSrv: LoggerService) {
 		this.log = this.loggerSrv.get('OpenViduSessionService');
 		this.OV = new OpenVidu();
@@ -161,7 +163,6 @@ export class OpenViduSessionService {
 
 	replaceTrack(videoSource: string, audioSource: string, mirror: boolean = true): Promise<any> {
 		return new Promise((resolve, reject) => {
-
 			if (!!videoSource) {
 				this.log.d('Replacing video track ' + videoSource);
 				this.videoSource = videoSource;
@@ -178,6 +179,7 @@ export class OpenViduSessionService {
 				this.audioSource,
 				this.hasWebcamVideoActive(),
 				this.hasWebcamAudioActive(),
+				this.resolution,
 				mirror
 			);
 
@@ -191,7 +193,6 @@ export class OpenViduSessionService {
 			publisher.once('accessDenied', () => {
 				reject();
 			});
-
 
 			// Reeplace track method
 			// this.webcamMediaStream = await this.OV.getUserMedia(properties);
@@ -210,7 +211,7 @@ export class OpenViduSessionService {
 	async replaceScreenTrack() {
 		const videoSource = ScreenType.SCREEN;
 		const hasAudio = !this.isWebCamEnabled();
-		const properties = this.createProperties(videoSource, undefined, true, hasAudio, false);
+		const properties = this.createProperties(videoSource, undefined, true, hasAudio, this.resolution, false);
 
 		this.stopScreenTracks();
 		this.screenMediaStream = await this.OVScreen.getUserMedia(properties);
@@ -294,6 +295,7 @@ export class OpenViduSessionService {
 		audioSource: string | MediaStreamTrack | boolean,
 		publishVideo: boolean,
 		publishAudio: boolean,
+		resolution: string,
 		mirror: boolean
 	): PublisherProperties {
 		return {
@@ -301,6 +303,7 @@ export class OpenViduSessionService {
 			audioSource,
 			publishVideo,
 			publishAudio,
+			resolution,
 			mirror
 		};
 	}

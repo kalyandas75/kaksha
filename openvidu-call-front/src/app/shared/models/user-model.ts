@@ -38,11 +38,7 @@ export class UserModel {
 	/**
 	 * @hidden
 	 */
-	constructor(
-		connectionId?: string,
-		streamManager?: StreamManager,
-		nickname?: string,
-	) {
+	constructor(connectionId?: string, streamManager?: StreamManager, nickname?: string) {
 		this.connectionId = connectionId || '';
 		this.nickname = nickname || 'OpenVidu';
 		this.streamManager = streamManager || null;
@@ -153,12 +149,12 @@ export class UserModel {
 	 * @hidden
 	 */
 	public setUserAvatar(img?: string): Promise<any> {
-		return new Promise(resolve => {
+		return new Promise((resolve) => {
 			if (!img) {
 				this.createVideoAvatar();
 				const video = <HTMLVideoElement>document.getElementById('video-' + this.getStreamManager().stream.streamId);
 				const avatar = this.videoAvatar.getContext('2d');
-				avatar.drawImage(video, 200, 120, 285, 285, 0, 0, 100, 100);
+				avatar.drawImage(video, 75, 30, 385, 385, 0, 0, 250, 250);
 				resolve();
 			} else {
 				this.randomAvatar = img;

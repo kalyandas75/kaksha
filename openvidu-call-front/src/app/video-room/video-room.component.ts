@@ -74,6 +74,8 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 	private remoteUsersSubscription: Subscription;
 	private chatSubscription: Subscription;
 
+	private resolution: string = '320x240';
+
 	constructor(
 		private networkSrv: NetworkService,
 		private router: Router,
@@ -110,7 +112,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			this.ovSettings.setScreenSharing(false);
 			// this.ovSettings.setVideo(false);
 		}
-
 	}
 
 	ngOnDestroy() {
@@ -227,10 +228,13 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 
 			screenPublisher.once('accessAllowed', (event) => {
 				// Listen to event fired when native stop button is clicked
-				screenPublisher.stream.getMediaStream().getVideoTracks()[0].addEventListener('ended', () => {
-					this.log.d('Clicked native stop button. Stopping screen sharing');
-					this.toggleScreenShare();
-				});
+				screenPublisher.stream
+					.getMediaStream()
+					.getVideoTracks()[0]
+					.addEventListener('ended', () => {
+						this.log.d('Clicked native stop button. Stopping screen sharing');
+						this.toggleScreenShare();
+					});
 				this.log.d('ACCESS ALOWED screenPublisher');
 				this.oVSessionService.enableScreenUser(screenPublisher);
 				this.oVSessionService.publishScreen();
@@ -244,7 +248,6 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 			screenPublisher.once('accessDenied', (event) => {
 				this.log.w('ScreenShare: Access Denied');
 			});
-
 
 			return;
 		}
@@ -465,7 +468,7 @@ export class VideoRoomComponent implements OnInit, OnDestroy {
 		const videoSource = ScreenType.SCREEN;
 		const willThereBeWebcam = this.oVSessionService.isWebCamEnabled() && this.oVSessionService.hasWebcamVideoActive();
 		const hasAudio = willThereBeWebcam ? false : this.oVSessionService.hasWebcamAudioActive();
-		const properties = this.oVSessionService.createProperties(videoSource, undefined, true, hasAudio, false);
+		const properties = this.oVSessionService.createProperties(videoSource, undefined, true, hasAudio, this.resolution, false);
 
 		try {
 			return this.oVSessionService.initScreenPublisher(undefined, properties);
