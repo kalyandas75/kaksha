@@ -72,6 +72,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 	private subscribeToMessages() {
 		this.chatMessageSubscription = this.chatService.messagesObs.subscribe((messages: ChatMessage[]) => {
+			this.scrollToBottom();
 			this.messageList = messages;
 		});
 	}
